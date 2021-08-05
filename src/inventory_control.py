@@ -53,20 +53,21 @@ class InventoryControl:
                 return False
 
     def get_quantities_to_buy(self):
-        to_buy = self.minimum_inventory
-        for ingredient in self.inventory.keys():
-            to_buy[ingredient] = (
-                to_buy[ingredient] - self.inventory[ingredient]
-            )
-        return to_buy
+        return {
+            ingredient: self.minimum_inventory[ingredient]
+            - self.inventory[ingredient]
+            for ingredient in self.inventory
+        }
 
     def get_available_dishes(self):
-        available_ingredients = set()
-        dishes = set()
-        for ingredient in self.inventory:
-            if self.inventory[ingredient] > 0:
-                available_ingredients.add(ingredient)
-        for dish in self.dishes:
-            if available_ingredients > set(self.dishes[dish]):
-                dishes.add(dish)
+        available_ingredients = set(
+            ingredient
+            for ingredient in self.inventory
+            if self.inventory[ingredient] > 0
+        )
+        dishes = set(
+            dish
+            for dish in self.dishes
+            if available_ingredients > set(self.dishes[dish])
+        )
         return dishes
